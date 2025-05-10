@@ -18,6 +18,7 @@ from sensitivity_tools import load_external_coil_sensitivities3D
 from scipy.io import loadmat
 import numpy as np
 import matplotlib.ticker as ticker
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 
 def to_numpy(x: torch.Tensor) -> np.ndarray:
     """Convert a torch tensor to a numpy ndarray."""
@@ -137,7 +138,10 @@ G27_data2 = torch.load('opt_results/noGRAPPA_nramp7_PF2.pth')
 G27t = G27_data1.get('reco_target')
 G27p = G27_data1.get('reco_perturb')
 G27o = G27_data2.get('reco_opt')
+tw1x_NISO = moms2phys(G27_data2.get('gmoms1'),FOV) / dt
+tw2x_NISO = moms2phys(G27_data2.get('gmoms2'),FOV) / dt
 tw3x_NISO = moms2phys(G27_data2.get('gmoms3'),FOV) / dt
+tw4x_NISO = moms2phys(G27_data2.get('gmoms4'),FOV) / dt
 sr3x_NISO = (tw3x_NISO[1:,0,0] - tw3x_NISO[:-1,0,0]) / dt
 kt_NISO = G27_data1.get('klocs_target')
 kp_NISO = G27_data1.get('klocs_perturbed')
@@ -162,12 +166,12 @@ plt.rcParams["grid.color"] = "lightgray"
 plt.rcParams["grid.linestyle"] = "-"
 plt.rcParams["grid.linewidth"] = 0.5
 
-gs   = fig1.add_gridspec(2,1)
-ax1  = fig1.add_subplot(gs[1,:])
+gs   = fig1.add_gridspec(2,3)
+ax1  = fig1.add_subplot(gs[1,0])
 ax1.plot(1000*t_axis[idx1:idx2].cpu().detach(),srx3.cpu().detach().numpy(),linewidth=2)
 ax1.plot(1000*t_axis[idx1:idx2-1].cpu().detach(),sr3x_NISO[idx1:idx2].cpu().detach().numpy(),linewidth=2)
-ax1.set_yticks([-360,-270,-180,-90,0,90,180,270,360])
-ax1.set_yticklabels(['-360','-270','-180','-90','0','90','180','270','360'])
+ax1.set_yticks([-360,-180,0,180,360])
+ax1.set_yticklabels(['-360','-180','0','180','360'])
 ax1.set_ylim(-360,360)
 ax1.yaxis.set_major_locator(ticker.MultipleLocator(90))
 ax1.grid(True)
@@ -177,7 +181,7 @@ plt.xticks(fontsize=14), plt.yticks(fontsize=14),plt.xlim(6,17.5)
 plt.xlabel('Time [ms]',fontsize=16)
 plt.ylabel('s [mT/m/ms]',fontsize=16)
 
-ax2  = fig1.add_subplot(gs[0,:])
+ax2  = fig1.add_subplot(gs[0,0])
 ax2.plot(1000*t_axis[idx1:idx2].cpu().detach(),1000*twx3.cpu().detach(),linewidth=2)
 ax2.plot(1000*t_axis[idx1:idx2].cpu().detach(),1000*tw3x_NISO[idx1:idx2,0,0].cpu().detach(),linewidth=2)
 ax2.grid(True)
@@ -189,12 +193,68 @@ ax2.legend(
     ['Pre-emphasis', 'NISO'],
     fontsize=17,
     loc='upper left',
-    bbox_to_anchor=(0.745, 1.185),  
+    bbox_to_anchor=(0.08, 1.2),  
     ncol=2
 )
 
 default_blue = '#348ABD'
 default_orange = '#E24A33'
+
+ax3  = fig1.add_subplot(gs[0,1])
+ax3.plot(1000*t_axis[idx1:idx2].cpu().detach(),1000*tw1x_NISO[idx1:idx2,0].cpu().detach(),linewidth=2,color='k',linestyle='--')
+ax3.plot(1000*t_axis[idx1:idx2].cpu().detach(),1000*twx3.cpu().detach(),linewidth=2)
+ax3.plot(1000*t_axis[idx1:idx2].cpu().detach(),1000*tw3x_NISO[idx1:idx2,0,0].cpu().detach(),linewidth=2,color=default_blue)
+ax3.grid(True)
+plt.xlabel('Time [ms]',fontsize=16)
+plt.ylabel('Gradients [mT/m]',fontsize=16)
+plt.xticks(fontsize=14), plt.yticks(fontsize=14),plt.xlim(7,8.2), plt.ylim(8.6,10.6)
+ax3.legend(
+    ['Nominal','Pre-emphasis: g(t)','NISO: g(t)'],
+    fontsize=14,
+    loc='upper right', 
+    ncol=1
+)
+
+ax4  = fig1.add_subplot(gs[1,1])
+ax4.plot(1000*t_axis[idx1:idx2].cpu().detach(),1000*tw1x_NISO[idx1:idx2,0].cpu().detach(),linewidth=2,color='k',linestyle='--')
+ax4.plot(1000*t_axis[idx1:idx2].cpu().detach(),1000*twx4.cpu().detach(),linewidth=2)
+ax4.plot(1000*t_axis[idx1:idx2].cpu().detach(),1000*tw4x_NISO[idx1:idx2,0,0].cpu().detach(),linewidth=2)#,color='g'
+ax4.grid(True)
+plt.xlabel('Time [ms]',fontsize=16)
+plt.ylabel('Gradients [mT/m]',fontsize=16)
+plt.xticks(fontsize=14), plt.yticks(fontsize=14),plt.xlim(7,8.2), plt.ylim(8.6,10.6)
+ax4.legend(
+    ['Nominal','Pre-emphasis: G(t)','NISO: G(t)'],
+    fontsize=14,
+    loc='upper right', 
+    ncol=1
+)
+
+default_blue = '#348ABD'
+ax5 = fig1.add_subplot(gs[:,2])
+ax5.axis('off')
+ax5_inset = inset_axes(ax5, width="80%", height="80%", loc='center')
+ax5_inset.plot(kp_NISO[:,0].cpu().detach().numpy(), kp_NISO[:,1].cpu().detach().numpy(), '.k',markersize=20,markerfacecolor='none', markeredgewidth=1.5)
+ax5_inset.plot(ko_NISO[:,0].cpu().detach().numpy(), ko_NISO[:,1].cpu().detach().numpy(), 'x',markersize=10, color=default_blue,markeredgewidth=2)
+ax5_inset.tick_params(axis='both', labelsize=14)
+ax5_inset.set_xlim([-49,-39])
+ax5_inset.set_ylim([38,48])
+ax5_inset.xaxis.set_major_locator(ticker.MultipleLocator(1))
+ax5_inset.yaxis.set_major_locator(ticker.MultipleLocator(1))
+ax5_inset.grid(True, which='major', linestyle='-', linewidth=3)
+ax5_inset.set_ylabel('$k_y$ index',fontsize=16)
+ax5_inset.set_xlabel('$k_x$ index',fontsize=16)
+ax5_inset.set_aspect('equal')
+ax5_inset.set_xticks([-49,-48,-47,-46,-45,-44,-43,-42,-41,-40,-39])
+ax5_inset.set_yticks([38,39,40,41,42,43,44,45,46,47,48])
+ax5_inset.set_xticklabels(['-49','','-47','','-45','','-43','','-41','','-39'])
+ax5_inset.set_yticklabels(['38','','40','','42','','44','','46','','48'])
+ax5_inset.legend(
+    ['Uncorrected','NISO'],
+    fontsize=17,
+    loc='upper left',
+    bbox_to_anchor=(0.35, 1.28),
+)
 
 plt.subplots_adjust(left=0.08, right=0.95, top=0.93, bottom=0.1,hspace=0.3,wspace=0.3)
 

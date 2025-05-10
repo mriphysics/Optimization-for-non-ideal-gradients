@@ -84,6 +84,7 @@ ax1.axhspan(-360, -180, facecolor='lightgray', alpha=0.5)
 plt.xticks(fontsize=14), plt.yticks(fontsize=14), plt.xlim(6,17.5)
 plt.xlabel('Time [ms]',fontsize=16)
 plt.ylabel('s [mT/m/ms]',fontsize=16)
+plt.title('Gradient slew rate',fontsize=20,fontweight='bold',loc='left')
 
 ax2  = fig1.add_subplot(gs[0,:3])
 ax2.plot(1000*t_axis[idx1:idx2].cpu().detach(),1000*PEtw.cpu().detach(),linewidth=2)
@@ -102,6 +103,7 @@ ax2.legend(
     bbox_to_anchor=(0.606, 1.185),  
     ncol=2
 )
+plt.title('Gradient amplitude',fontsize=20,fontweight='bold',loc='left')
 
 default_blue = '#348ABD'
 default_orange = '#E24A33'
@@ -146,7 +148,7 @@ legend_handles = [
 ]
 ax8.legend(handles=legend_handles, fontsize=17, loc='upper left', bbox_to_anchor=(1.05, -0.1))
 
-plt.subplots_adjust(left=0.08, right=0.85, top=0.93, bottom=0.1,hspace=0.3,wspace=0.3)
+plt.subplots_adjust(left=0.08, right=0.85, top=0.93, bottom=0.1,hspace=0.3,wspace=0.4)
 
 fig2 = plt.figure(2)
 
@@ -208,15 +210,15 @@ NRMSE_PE = util.NRMSE(PEreco1, PEtarget)
 
 #%% Combining figures.
 
-image1 = Image.open('FIG1A_1m.png')
-image2 = Image.open('FIG1B_1m.png')
+image1 = Image.open('FIG1A.png')
+image2 = Image.open('FIG1B.png')
 width = max(image1.width,image2.width)
 image1 = image1.resize((width,image1.height))
 image2 = image2.resize((width,image2.height))
 stacked_image = Image.new('RGB',(width,image1.height+image2.height))
 stacked_image.paste(image1,(0,0))
 stacked_image.paste(image2,(0,image1.height))
-stacked_image.save('FIG1_1m.png')
+stacked_image.save('FIG1.png')
 
 #%% GMTF (Figure 2 inversion results are in GIRF_invert_GRAPPA.py) #%%
 
@@ -382,7 +384,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FormatStrFormatter
 
-categories = ["no GRAPPA SE", "no GRAPPA NSE", "GRAPPA2", "GRAPPA3", "Multishot"]
+categories = ["no GRAPPA\n(shorter TE)", "no GRAPPA", "GRAPPA2", "GRAPPA3", "Multishot"]
 values_nominal = [1.1149506, 0.958608, 0.98617, 0.987031, 0.835101]
 values_pre_emphasis = [1.957344, 1.632981, 1.685629, 1.685011, 1.457267]
 values_niso = [0.999999, 0.96221, 0.998357, 0.991811, 0.991704]
@@ -406,4 +408,3 @@ plt.tight_layout()
 ax.set_ylim(0,2)
 plt.show()
 plt.subplots_adjust(left=0.08, right=0.96, top=0.95, bottom=0.25)
-
