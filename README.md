@@ -2,7 +2,7 @@
 
 ## Installation
 - Start with an empty Python environment and run ```pip install -r requirements.txt```
-- Download coil sensitivity files for the simulations from https://doi.org/10.5281/zenodo.10849727 [NEEDS TO BE UPDATED] and put them into the sub-directory ```/data```
+- Download coil sensitivity files for the simulations from https://doi.org/10.5281/zenodo.15498143 and put them into the sub-directory ```/data```
   - data/B1minus_14ch_simu_3D_Gaussians.mat
   - data/B1minus_32ch_7T.mat
 
