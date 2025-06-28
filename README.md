@@ -2,8 +2,7 @@
 
 ## License
 
-This software is licensed under the GNU Affero General Public License v3.0.  
-See the [LICENSE](LICENSE) file for more details.
+This software is licensed under the GNU Affero General Public License v3.0. See the LICENSE file for more details.
 
 ## Installation
 - Start with an empty Python environment and run ```pip install -r requirements.txt```
