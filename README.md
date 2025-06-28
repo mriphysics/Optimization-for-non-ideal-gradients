@@ -1,5 +1,10 @@
 # MR sequence design to account for non-ideal gradient performance.
 
+## License
+
+This software is licensed under the GNU Affero General Public License v3.0.  
+See the [LICENSE](LICENSE) file for more details.
+
 ## Installation
 - Start with an empty Python environment and run ```pip install -r requirements.txt```
 - Download coil sensitivity files for the simulations from https://doi.org/10.5281/zenodo.15498143 and put them into the sub-directory ```/data```
