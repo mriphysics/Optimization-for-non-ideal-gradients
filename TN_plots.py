@@ -378,7 +378,7 @@ ax3.set_yticks([])
 
 plt.subplots_adjust(left=0.02, right=0.98, top=0.98, bottom=0.02, hspace=0.1)
 
-#%% FIGURE 4: BAR CHART #%%
+#%% FIGURE 4: SLEW RATE BAR CHART #%%
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -392,7 +392,7 @@ values_op = [0.999999, 0.96221, 0.998357, 0.991811, 0.991704]
 x = np.arange(len(categories))
 width = 0.25
 
-fig, ax = plt.subplots(figsize=(18, 8))
+fig, ax = plt.subplots(figsize=(8, 9))
 ax.bar(x - width, values_nominal, width, label='Nominal', color='#999999', alpha=0.7)
 ax.bar(x, values_pre_emphasis, width, label='Pre-emphasis', color='#E24A33', alpha=0.7)
 ax.bar(x + width, values_op, width, label='Optimized', color='#348ABD', alpha=0.7)
@@ -402,9 +402,37 @@ ax.set_xticks(x)
 ax.yaxis.set_major_formatter(FormatStrFormatter('%.1f'))
 ax.set_xticklabels(categories, rotation=30, ha="right", fontsize=24,fontweight="bold")
 ax.tick_params(axis='y', labelsize=22)
-ax.legend(fontsize=22)
+#fig.legend(fontsize=22, loc='outside right')
 ax.axhline(y=1, color='black', linestyle='--', linewidth=3)
 plt.tight_layout()
 ax.set_ylim(0,2)
 plt.show()
-plt.subplots_adjust(left=0.08, right=0.96, top=0.95, bottom=0.25)
+plt.subplots_adjust(left=0.2, right=0.96, top=0.95, bottom=0.20)
+
+#%% FIGURE 4: GHOST INTENSITY BAR CHART #%%
+
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.ticker import FormatStrFormatter
+
+categories = ["R=1\n(shorter TE)", "R=1", "R=2", "R=3", "Multi-shot"]
+values_nominal = np.array([np.nan, 0.5279, 0.1750, 0.0923, 0.1398])*100
+values_op = np.array([0.0368, 0.0402, 0.0635, 0.0262, 0.0268])*100
+
+x = np.arange(len(categories))
+width = 0.25
+
+fig, ax = plt.subplots(figsize=(8, 9))
+ax.bar(x - width/2, values_nominal, width, label='Nominal', color='#999999', alpha=0.7)
+ax.bar(x + width/2, values_op, width, label='Optimized', color='#348ABD', alpha=0.7)
+ax.grid(True)
+ax.set_ylabel(r"Relative artefact intensity [%]", fontsize=26)
+ax.set_xticks(x)
+ax.yaxis.set_major_formatter(FormatStrFormatter('%.0f'))
+ax.set_xticklabels(categories, rotation=30, ha="right", fontsize=24,fontweight="bold")
+ax.tick_params(axis='y', labelsize=22)
+plt.tight_layout()
+ax.set_ylim(0,60)
+ax.set_xlim(-0.6125, 4.6125)
+plt.show()
+plt.subplots_adjust(left=0.2, right=0.96, top=0.95, bottom=0.20)
