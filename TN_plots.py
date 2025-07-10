@@ -97,10 +97,10 @@ plt.xticks(fontsize=14)
 plt.yticks(fontsize=14)
 plt.xlim(6,17.5)
 ax2.legend(
-    ['Pre-emphasis', 'NISO'],
+    ['Pre-emphasis', 'Optimized'],
     fontsize=17,
     loc='upper left',
-    bbox_to_anchor=(0.606, 1.185),  
+    bbox_to_anchor=(0.545, 1.185),  
     ncol=2
 )
 plt.title('Gradient amplitude',fontsize=20,fontweight='bold',loc='left')
@@ -144,7 +144,7 @@ ax8.set_yticklabels(['38','','40','','42','','44','','46','','48'])
 legend_handles = [
     Line2D([0], [0], marker='o', color='k', linestyle='None', label='Uncorrected', markersize=20, markerfacecolor='none', markeredgewidth=1.5),
     Line2D([0], [0], marker='x', color=default_orange, linestyle='None', label='Pre-emphasis', markersize=10, markeredgewidth=2),
-    Line2D([0], [0], marker='x', color=default_blue, linestyle='None', label='NISO', markersize=10, markeredgewidth=2)
+    Line2D([0], [0], marker='x', color=default_blue, linestyle='None', label='Optimized', markersize=10, markeredgewidth=2)
 ]
 ax8.legend(handles=legend_handles, fontsize=17, loc='upper left', bbox_to_anchor=(1.05, -0.1))
 
@@ -195,7 +195,7 @@ plt.imshow(np.abs((np.rot90(to_numpy(torch.abs((reco_target/max_sig))))-np.rot90
 cbar = plt.colorbar(fraction=0.0453)
 plt.set_cmap('gist_heat')
 cbar.ax.tick_params(labelsize=14)
-plt.title('NISO',fontsize=22,fontweight='bold')
+plt.title('OPTIMIZED',fontsize=22,fontweight='bold')
 plt.clim(0,0.01)
 ax7.set_xticklabels([])
 ax7.set_yticklabels([])
@@ -205,7 +205,7 @@ ax7.set_yticks([])
 plt.subplots_adjust(left=0.03, right=0.95, top=0.95, bottom=0.05,hspace=0.3,wspace=0.3)
 
 NRMSE_0  = util.NRMSE(reco_perturb, reco_target)
-NRMSE_NISO = util.NRMSE(reco_UC, reco_target)
+NRMSE_op = util.NRMSE(reco_UC, reco_target)
 NRMSE_PE = util.NRMSE(PEreco1, PEtarget)
 
 #%% Combining figures.
@@ -218,7 +218,7 @@ image2 = image2.resize((width,image2.height))
 stacked_image = Image.new('RGB',(width,image1.height+image2.height))
 stacked_image.paste(image1,(0,0))
 stacked_image.paste(image2,(0,image1.height))
-stacked_image.save('knote_FIG1_R1.png')
+stacked_image.save('knote_FIG3_R1.png')
 
 #%% GMTF (Figure 2 inversion results are in GIRF_invert_noGRAPPA.py) #%%
 
@@ -384,10 +384,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FormatStrFormatter
 
-categories = ["no GRAPPA\n(shorter TE)", "no GRAPPA", "GRAPPA2", "GRAPPA3", "Multishot"]
+categories = ["R=1\n(shorter TE)", "R=1", "R=2", "R=3", "Multi-shot"]
 values_nominal = [1.1149506, 0.958608, 0.98617, 0.987031, 0.835101]
 values_pre_emphasis = [1.957344, 1.632981, 1.685629, 1.685011, 1.457267]
-values_niso = [0.999999, 0.96221, 0.998357, 0.991811, 0.991704]
+values_op = [0.999999, 0.96221, 0.998357, 0.991811, 0.991704]
 
 x = np.arange(len(categories))
 width = 0.25
@@ -395,7 +395,7 @@ width = 0.25
 fig, ax = plt.subplots(figsize=(18, 8))
 ax.bar(x - width, values_nominal, width, label='Nominal', color='#999999', alpha=0.7)
 ax.bar(x, values_pre_emphasis, width, label='Pre-emphasis', color='#E24A33', alpha=0.7)
-ax.bar(x + width, values_niso, width, label='NISO', color='#348ABD', alpha=0.7)
+ax.bar(x + width, values_op, width, label='Optimized', color='#348ABD', alpha=0.7)
 ax.grid(True)
 ax.set_ylabel(r"$s$ / $s_{\max}$", fontsize=38)
 ax.set_xticks(x)
