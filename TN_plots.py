@@ -233,33 +233,46 @@ Hxx = GMTF['GMTF1xx'][0, 0]
 Hyy = GMTF['GMTF1yy'][0, 0] 
 Hxy = GMTF['GMTF1xy'][0, 0] 
 Hyx = GMTF['GMTF1yx'][0, 0]
+H0x = GMTF['GMTF0x'][0, 0]
+H0y = GMTF['GMTF0y'][0, 0]
 ff  = np.transpose(GMTF['freq'][0, 0] )
 
 plt.figure(1)
-plt.subplot(2,1,1)
+plt.subplot(3,1,1)
 plt.plot(1e-3*ff,np.abs(Hxx),color='#009E73')
 plt.plot(1e-3*ff,np.abs(Hyy),color='#E69F00')
-plt.xticks(fontsize=18)
-plt.yticks(fontsize=18)
-plt.xlabel('f [kHz]',fontsize=20)
-plt.ylabel('|H(f)|',fontsize=20)
+plt.xticks(fontsize=14)
+plt.yticks(fontsize=14)
+plt.xlabel('f [kHz]',fontsize=16)
+plt.ylabel('|H(f)|',fontsize=16)
 plt.xlim([-50,50])
 plt.grid(True)
-plt.legend(['XX','YY'],fontsize=24,loc='upper right',ncol=2);
+plt.legend(['XX','YY'],fontsize=18,loc='upper right',ncol=2);
 
-ax2 = plt.subplot(2,1,2)
+ax2 = plt.subplot(3,1,2)
 plt.plot(1e-3*ff,np.abs(Hxy),color='#009E73')
 plt.plot(1e-3*ff,np.abs(Hyx),color='#E69F00')
-plt.xticks(fontsize=18)
-plt.yticks(fontsize=18)
-plt.xlabel('f [kHz]',fontsize=20)
-plt.ylabel('|H(f)|',fontsize=20)
+plt.xticks(fontsize=14)
+plt.yticks(fontsize=14)
+plt.xlabel('f [kHz]',fontsize=16)
+plt.ylabel('|H(f)|',fontsize=16)
 plt.xlim([-50,50]), plt.ylim([0,0.008])
 plt.grid(True)
-plt.legend(['XY','YX'],fontsize=24,loc='upper right',ncol=2);
+plt.legend(['XY','YX'],fontsize=18,loc='upper right',ncol=2);
 ax2.set_yticklabels(['0','','0.002','','0.004','','0.006','','0.008'])
 
-plt.subplots_adjust(left=0.1, right=0.95, top=0.95, bottom=0.1,hspace=0.3)
+ax3 = plt.subplot(3,1,3)
+plt.plot(1e-3*ff,np.abs(H0x)*gamma_*1e3,color='#009E73')
+plt.plot(1e-3*ff,np.abs(H0y)*gamma_*1e3,color='#E69F00')
+plt.xticks(fontsize=14)
+plt.yticks(fontsize=14)
+plt.xlabel('f [kHz]',fontsize=16)
+plt.ylabel('|H(f)| [Hz/(mT/m)]',fontsize=16)
+plt.xlim([-50,50])
+plt.grid(True)
+plt.legend(['X','Y'],fontsize=18,loc='upper right',ncol=2);
+
+plt.subplots_adjust(left=0.1, right=0.95, top=0.95, bottom=0.1, hspace=0.4)
 
 #%% FIGURE 4: SIMULATED RESULTS #%%
 
@@ -417,7 +430,7 @@ from matplotlib.ticker import FormatStrFormatter
 
 categories = ["R=1\n(shorter TE)", "R=1", "R=2", "R=3", "Multi-shot"]
 values_nominal = np.array([np.nan, 0.5279, 0.1750, 0.0923, 0.1398])*100
-values_op = np.array([0.0368, 0.0402, 0.0635, 0.0262, 0.0268])*100
+values_op =      np.array([0.0368, 0.0402, 0.0635, 0.0262, 0.0268])*100
 
 x = np.arange(len(categories))
 width = 0.25
